@@ -1,6 +1,7 @@
 {-
 ---
 fulltitle: Higher-Order Programming Patterns
+date: September 13, 2021
 ---
 -}
 
@@ -300,9 +301,10 @@ mechanism to create such *anonymous* functions. For example,
 
     \x -> x + 1
 
-is an expression that corresponds to a function that takes an argument `x`
-and returns as output the value `x + 2`. The function has no name, but we
-can use it in the same place where we would write a function.
+is an expression that corresponds to a function that takes an argument `x` and
+returns as output the value `x + 1`. The function has no name, but we can
+use it in the same place where we would write a function.
+
 -}
 
 anonTests :: Test
@@ -313,6 +315,13 @@ anonTests =
     ]
 
 {-
+We call this expression form a "lambda expression", inspired by the [lambda
+calculus](https://en.wikipedia.org/wiki/Lambda_calculus). The backslash at
+the beginning of the expression is meant to look a little like the greek
+letter λ (lambda) and the `->` between the parameter `x` and the body of
+the function is meant to remind you that this expression form creates
+a value with a function type.
+
 Of course, we could name the function if we wanted to
 -}
 
@@ -325,6 +334,11 @@ Indeed, in general, a function defining equation
     f x1 x2 ... xn = e
 
 is equivalent to
+
+    f = \x1 -> \x2 -> ... \xn -> e
+
+Furthermore, we can also write nested lambda expressions together, with a single
+`\` and `->`.
 
     f = \x1 x2 ... xn -> e
 

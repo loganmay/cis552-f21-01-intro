@@ -1016,6 +1016,36 @@ testIsLong =
     ]
 
 {-
+Finally, all of the patterns we have shown you so far have been part of definitions. We can define a function, like `isSingleton` or `isGreeting` above, by cases, using multiple lines. This style is common in Haskell, but if you are coming from OCaml, you might be more familiar with `match`, or a separate expression form of pattern matching. Such a form is also available in Haskell, using the `case` and `of` keywords.
+
+For example, we can rewrite `isGreeting` using `case` instead.
+-}
+
+isGreeting2 :: String -> Bool
+isGreeting2 s =
+  case s of
+    "Hi" -> True
+    "Hello" -> True
+    "Bonjour" -> True
+    "Guten Tag" -> True
+    _ -> False
+
+{-
+Note that all of the patterns in a case expression must start in the same column of your source file. This expression is layout sensitive, and if things don't line up, you will get a compilation error. Case expressions are particularly good for *nested* patterns, where you might want to match again inside of a branch. Here's a silly definition of `isGreeting` that demonstrates a nested pattern. Note how the layout determines where the patterns for the inner `case` end and the ones for the outer `case` resume.
+-}
+
+isGreeting3 :: String -> Bool
+isGreeting3 s =
+  case s of
+    ('H' : r) -> case r of
+      "i" -> True
+      "ello" -> True
+      _ -> False
+    "Bonjour" -> True
+    "Guten Tag" -> True
+    _ -> False
+
+{-
 Function practice: List Recursion
 ------------------------------
 
