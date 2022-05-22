@@ -106,6 +106,12 @@ computation.
 h1 :: Int -> Int
 h1 y = sum1 [1 .. y * 100000]
 
+h3 :: Int -> Int
+h3 y = sum3 [1 .. y * 100000]
+
+h5 :: Int -> Int
+h5 y = sum5 [1 .. y * 100000]
+
 -- A potentially big computation (ignore first argument)
 f1 :: Int -> Int -> Int
 f1 _x y = sum1 [1 .. y * 100000]
@@ -117,6 +123,12 @@ g1 x y = if x > 0 then sum1 [1 .. y * 100000] else sum2 [1 .. y * 100000]
 -- Call h1 with same argument multiple times.
 u1 :: Int
 u1 = h1 1 + h1 1 + h1 1
+
+u3 :: Int
+u3 = h3 1 + h3 1 + h3 1
+
+u5 :: Int
+u5 = h5 1 + h5 1 + h5 1
 
 -- Call f1 with same and different arguments multiple times.
 v1 :: Int
