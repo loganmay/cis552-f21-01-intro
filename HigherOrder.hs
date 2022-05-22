@@ -42,7 +42,7 @@ Or you can make a list containing the functions
 -}
 
 funs :: [Int -> Int]
-funs = undefined
+funs = [plus1, minus1]
 
 {-
 Taking Functions as Input
@@ -253,7 +253,10 @@ arguments before substituting them into the body of a defined function.
 
     doTwicePlus20 0 == doTwice (plus 20) 0        {- unfold doTwice -}
                     == (plus 20) ((plus 20) 0)
-                    ... undefined (fill this part in) ...
+                    == plus 20 ((plus 20) 0)
+                    == 20 + ((plus 20 ) 0)
+                    == 20 + (plus 20) 0
+                    == 20 + plus 20 0
                     == 20 + 20 + 0
                     == 40
 
@@ -416,7 +419,7 @@ following test passes.
 -}
 
 singleton :: a -> [a]
-singleton = undefined
+singleton = (: [])
 
 singletonTest :: Test
 singletonTest = singleton True ~?= [True]
@@ -478,11 +481,27 @@ ex1 :: (a -> a) -> a -> a
 ex1 x y = doTwice doTwice x y
 
 {-
+doTwice doTwice x y
+(doTwice doTwice x) y
+(doTwice (doTwice x)) y
 
+(doTwice (x x)) y
+((x x) (x x)) y
+(x x) (x x) y
+x x (x x) y
+x x x x y
+
+WRONG ^ seeing if i can do it from == doTwice (doTwice f) y
+
+doTwice doTwice f y == doTwice (doTwice f) y
+                    == (doTwice f) ((doTwice f) y)
+                    == doTwice f (doTwice f y)
+                    == f ( f (doTwice f y))
+                    == f (f (f (f y)))
 -}
 
 ex1Test :: Test
-ex1Test = undefined
+ex1Test = ex1 (+ 1) 1 ~?= 5
 
 {-
 Polymorphic Data Structures
@@ -646,7 +665,7 @@ toUpperString' :: String -> String
 toUpperString' xs = map toUpper xs
 
 shiftPoly' :: XY -> Polygon -> Polygon
-shiftPoly' d = undefined
+shiftPoly' d = map (shiftXY d)
 
 {-
 Much better.  But let's make sure our refactoring didn't break anything!
@@ -692,7 +711,7 @@ We can write this more cleanly with map, of course:
 -}
 
 listIncr' :: [Int] -> [Int]
-listIncr' = undefined
+listIncr' = map (+ 1)
 
 {-
 Computation Pattern: Folding
@@ -770,7 +789,7 @@ from our list-length function?
 -}
 
 len' :: [a] -> Int
-len' = undefined
+len' = foldr (const (+ 1)) 0
 
 {-
 Once you have defined `len` in this way, see if you can trace how it
@@ -791,7 +810,16 @@ factorial 0 = 1
 factorial n = n * factorial (n -1)
 
 factorial' :: Int -> Int
-factorial' n = undefined
+factorial' n = foldr (*) 1 [2 .. n]
+
+testFactorial :: Test
+testFactorial =
+  TestList
+    [ factorial' 0 ~?= (1 :: Int),
+      factorial' 1 ~?= (1 :: Int),
+      factorial' 2 ~?= (2 :: Int),
+      factorial' 5 ~?= (120 :: Int)
+    ]
 
 {-
 OK, one more.  The standard list library function `filter` has this
@@ -816,7 +844,7 @@ testFilter =
 Can we implement filter using foldr?  Sure!
 -}
 
-filter pred = undefined
+filter pred = foldr (\x acc -> if pred x then x : acc else acc) []
 
 runTests :: IO Counts
 runTests = runTestTT $ TestList [testMap, testFoldr, testFilter]
